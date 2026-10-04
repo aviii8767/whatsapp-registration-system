@@ -1,0 +1,6 @@
+{
+  "Maharashtra": ["Pune", "Mumbai City", "Mumbai Suburban", "Nagpur", "Nashik", "Thane", "Kolhapur", "Satara", "Sangli", "Solapur"],
+  "Karnataka": ["Bengaluru Urban", "Mysuru", "Belagavi", "Hubballi-Dharwad", "Mangaluru"],
+  "Gujarat": ["Ahmedabad", "Surat", "Vadodara", "Rajkot"],
+  "Uttar Pradesh": ["Lucknow", "Kanpur Nagar", "Varanasi", "Agra", "Prayagraj"]
+}

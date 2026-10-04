@@ -25,6 +25,7 @@
     border-radius: 0 6px 6px 0;
     margin-top: 0;
   }
+    input, select { width: 100%; padding: 10px; margin-top: 4px; box-sizing: border-box; }
 </style>
 </head>
 <body>
@@ -33,6 +34,19 @@
 
   <label>Name</label>
   <input type="text" id="name" required />
+
+    <label>Country</label>
+  <input type="text" id="country" value="India" readonly style="background:#f0f0f0;" />
+
+  <label>State</label>
+  <select id="state" required>
+    <option value="">-- Select State --</option>
+  </select>
+
+  <label>District</label>
+  <select id="district" required disabled>
+    <option value="">-- Select State first --</option>
+  </select>
 
   <label>Village</label>
   <input type="text" id="village" required />
@@ -54,12 +68,51 @@
 </form>
 
 <script>
+const stateSelect = document.getElementById('state');
+const districtSelect = document.getElementById('district');
+let statesData = {};
+
+fetch('/static/india-states-districts.json')
+  .then((res) => res.json())
+  .then((data) => {
+    statesData = data;
+    Object.keys(data).sort().forEach((state) => {
+      const opt = document.createElement('option');
+      opt.value = state;
+      opt.textContent = state;
+      stateSelect.appendChild(opt);
+    });
+  });
+
+stateSelect.addEventListener('change', () => {
+  const selected = stateSelect.value;
+  districtSelect.innerHTML = '';
+
+  if (!selected || !statesData[selected]) {
+    districtSelect.innerHTML = '<option value="">-- Select State first --</option>';
+    districtSelect.disabled = true;
+    return;
+  }
+
+  districtSelect.disabled = false;
+  districtSelect.innerHTML = '<option value="">-- Select District --</option>';
+  statesData[selected].forEach((district) => {
+    const opt = document.createElement('option');
+    opt.value = district;
+    opt.textContent = district;
+    districtSelect.appendChild(opt);
+  });
+});
+
+
 document.getElementById('regForm').addEventListener('submit', async (e) => {
   e.preventDefault();  // stop the browser from doing a normal page reload on submit
 
   const payload = {
     name: document.getElementById('name').value,
     village: document.getElementById('village').value,
+    state: stateSelect.value,
+    district: districtSelect.value,
     mobile: document.getElementById('mobile').value,
     age: parseInt(document.getElementById('age').value),
     work: document.getElementById('work').value,

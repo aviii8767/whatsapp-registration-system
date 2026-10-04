@@ -7,7 +7,10 @@ class Registration(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
+    country = Column(String, nullable=False, default="India")
     village = Column(String, nullable=False)
+    state = Column(String, nullable=False)
+    district = Column(String, nullable=False)
     mobile = Column(String, nullable=False, unique=True, index=True)
     age = Column(Integer, nullable=False)
     work = Column(String, nullable=False)

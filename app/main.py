@@ -32,8 +32,11 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 class RegistrationIn(BaseModel):
     name: str = Field(min_length=1)
+    country: str = Field(default="India")
     village: str = Field(min_length=1)
-    mobile: str = Field(min_length=10, max_length=15)
+    state: str = Field(min_length=1)
+    district: str = Field(min_length=1)
+    mobile: str = Field(min_length=1)
     age: int = Field(gt=0, lt=120)
     work: str = Field(min_length=1)
 
@@ -42,6 +45,8 @@ class RegistrationIn(BaseModel):
     def mobile_must_be_digits(cls, v):
         if not v.isdigit():
             raise ValueError("Mobile number must contain digit only")
+        if len(v) != 10:
+            raise ValueError("Mobile number must be exactly 10 digits")
         return v
 
 
@@ -53,7 +58,10 @@ def root():
 def register(payload: RegistrationIn, db: Session = Depends(get_db)):
     record = models.Registration(
         name=payload.name,
+        country=payload.country,
         village=payload.village,
+        state=payload.state,
+        district=payload.district,
         mobile=payload.mobile,
         age=payload.age,
         work=payload.work,
