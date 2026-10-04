@@ -1,7 +1,8 @@
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, Request
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
-from pydantic import BaseModel, Field
+from fastapi.responses import FileResponse, JSONResponse
+from fastapi.exceptions import RequestValidationError
+from pydantic import BaseModel, Field, field_validator
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 
@@ -14,6 +15,16 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    first_error = exc.errors()[0]
+    field = first_error["loc"][-1]  # which field failed
+    message = first_error["msg"] # why it failed
+    return JSONResponse(
+        status_code=422,
+        content={"detail": f"{field}: {message}"},
+    )
+
 # Makes everything inside the "static" folder reachable in the browser,
 # e.g. static/register.html becomes http://localhost:8000/static/register.html
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -25,6 +36,13 @@ class RegistrationIn(BaseModel):
     mobile: str = Field(min_length=10, max_length=15)
     age: int = Field(gt=0, lt=120)
     work: str = Field(min_length=1)
+
+    @field_validator("mobile")
+    @classmethod
+    def mobile_must_be_digits(cls, v):
+        if not v.isdigit():
+            raise ValueError("Mobile number must contain digit only")
+        return v
 
 
 @app.get("/")

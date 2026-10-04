@@ -10,6 +10,21 @@
   input { width: 100%; padding: 8px; margin-top: 4px; box-sizing: border-box; }
   button { margin-top: 18px; padding: 10px; width: 100%; background: #128C7E; color: #fff; border: none; border-radius: 6px; }
   #msg { margin-top: 10px; }
+    .mobile-group { display: flex; margin-top: 4px; }
+  .mobile-group .prefix {
+    padding: 8px 10px;
+    background: #eee;
+    border: 1px solid #ccc;
+    border-right: none;
+    border-radius: 6px 0 0 6px;
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+  }
+  .mobile-group input {
+    border-radius: 0 6px 6px 0;
+    margin-top: 0;
+  }
 </style>
 </head>
 <body>
@@ -22,8 +37,11 @@
   <label>Village</label>
   <input type="text" id="village" required />
 
-  <label>Mobile</label>
-  <input type="tel" id="mobile" required />
+  <label>Mobile Number</label>
+  <div class="mobile-group">
+    <span class="prefix">+91</span>
+    <input type="tel" id="mobile" maxlength="10" inputmode="numeric" placeholder="10-digit number" required/>
+  </div>
 
   <label>Age</label>
   <input type="number" id="age" required />
@@ -53,7 +71,9 @@ document.getElementById('regForm').addEventListener('submit', async (e) => {
     body: JSON.stringify(payload),
   });
   const data = await res.json();
-  document.getElementById('msg').textContent = res.ok ? 'Registered!' : data.detail;
+  const msgDiv = document.getElementById('msg');
+  msgDiv.style.color = res.ok ? 'green' : 'red';
+  msgDiv.textContent = res.ok ? 'Registered!' : data.detail;
 });
 </script>
 </body>
