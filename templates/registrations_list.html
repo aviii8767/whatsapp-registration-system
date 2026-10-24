@@ -8,8 +8,8 @@
   <table class="data-table">
     <thead>
       <tr>
-        <th>ID</th><th>Name</th><th>Village</th><th>District</th><th>State</th>
-        <th>Mobile</th><th>Age</th><th>Work</th><th>Registered</th>
+        <th>ID</th><th>Name</th><th>Age</th><th>Mobile</th><th>Work</th>
+        <th>Village</th><th>District</th><th>State</th><th>Registered</th>
       </tr>
     </thead>
     <tbody>
@@ -17,12 +17,12 @@
       <tr>
         <td data-label="ID">{{ r.id }}</td>
         <td data-label="Name">{{ r.name }}</td>
+        <td data-label="Age">{{ r.age }}</td>
+        <td data-label="Mobile">{{ r.mobile }}</td>
+        <td data-label="Work">{{ r.work }}</td>
         <td data-label="Village">{{ r.village }}</td>
         <td data-label="District">{{ r.district }}</td>
-        <td data-label="State">{{ r.state }}</td>
-        <td data-label="Mobile">{{ r.mobile }}</td>
-        <td data-label="Age">{{ r.age }}</td>
-        <td data-label="Work">{{ r.work }}</td>
+        <td data-label="State">{{ r.state }}</td>   
         <td data-label="Registered">{{ r.created_at.strftime('%d %b %Y, %I:%M %p') }}</td>
       </tr>
       {% endfor %}
